@@ -1,0 +1,111 @@
+#include <stdio.h>
+
+#define MAX_PROCESSES 3
+
+typedef struct {
+
+    int burstTime;
+
+    int priority;
+
+    int waitingTime;
+
+    int turnaroundTime;
+
+} Process;
+
+void calculateWaitingTime(Process processes[], int numProcesses) {
+
+    processes[0].waitingTime = 0;
+
+    for (int i = 1; i < numProcesses; i++) {
+
+        processes[i].waitingTime = 0;
+
+        for (int j = 0; j < i; j++) {
+
+            processes[i].waitingTime += processes[j].burstTime;
+
+        }
+
+    }
+
+}
+
+void calculateTurnaroundTime(Process processes[], int numProcesses) {
+
+    for (int i = 0; i < numProcesses; i++) {
+
+        processes[i].turnaroundTime = processes[i].waitingTime + processes[i].burstTime;
+
+    }
+
+}
+
+float calculateAverageWaitingTime(Process processes[], int numProcesses) {
+
+    int totalWaitingTime = 0;
+
+    for (int i = 0; i < numProcesses; i++) {
+
+        totalWaitingTime += processes[i].waitingTime;
+
+    }
+
+    return (float)totalWaitingTime / numProcesses;
+
+}
+
+float calculateAverageTurnaroundTime(Process processes[], int numProcesses) {
+
+    int totalTurnaroundTime = 0;
+
+    for (int i = 0; i < numProcesses; i++) {
+
+        totalTurnaroundTime += processes[i].turnaroundTime;
+
+    }
+
+    return (float)totalTurnaroundTime / numProcesses;
+
+}
+
+int main() {
+
+    Process processes[MAX_PROCESSES] = {
+
+        {30, 2, 0, 0},
+
+        {5, 1, 0, 0},
+
+        {12, 3, 0, 0}
+
+    };
+
+    int numProcesses = sizeof(processes) / sizeof(processes[0]);
+
+    calculateWaitingTime(processes, numProcesses);
+
+    calculateTurnaroundTime(processes, numProcesses);
+
+    float avgWaitingTime = calculateAverageWaitingTime(processes, numProcesses);
+
+    float avgTurnaroundTime = calculateAverageTurnaroundTime(processes, numProcesses);
+
+    printf("Process\tBurst Time\tPriority\tWaiting Time\tTurnaround Time\n");
+
+    for (int i = 0; i < numProcesses; i++) {
+
+        printf("P%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i + 1, processes[i].burstTime,
+
+               processes[i].priority, processes[i].waitingTime, processes[i].turnaroundTime);
+
+    }
+
+    printf("\nAverage Waiting Time: %.2f\n", avgWaitingTime);
+
+    printf("Average Turnaround Time: %.2f\n", avgTurnaroundTime);
+
+    return 0;
+
+}
