@@ -1,0 +1,91 @@
+#include <stdio.h>
+
+#define MAX_PARTITIONS 5
+
+typedef struct {
+
+    int id;
+
+    int size;
+
+    int allocated;
+
+} Process;
+
+typedef struct {
+
+    int size;
+
+    int allocated;
+
+} Partition;
+
+void firstFit(Process process, Partition partitions[], int numPartitions) {
+
+    int i;
+
+    for (i = 0; i < numPartitions; i++) {
+
+        if (partitions[i].allocated == 0 && partitions[i].size >= process.size) {
+
+            partitions[i].allocated = 1;
+
+            process.allocated = 1;
+
+            printf("Process %d of size %d KB is allocated to partition %d of size %d KB\n",
+
+                   process.id, process.size, i + 1, partitions[i].size);
+
+            break;
+
+        }
+
+    }
+
+    if (process.allocated == 0) {
+
+        printf("Process %d of size %d KB cannot be allocated to any partition\n",
+
+               process.id, process.size);
+
+    }
+
+}
+
+int main() {
+
+    Partition partitions[MAX_PARTITIONS] = {
+
+        {40, 0}, {10, 0}, {30, 0}, {60, 0}
+
+    };
+
+    Process processes[] = {
+
+        {1, 100, 0}, {2, 50, 0}, {3, 30, 0}, {4, 120, 0}, {5, 35, 0}
+
+    };
+
+    int numPartitions = sizeof(partitions) / sizeof(partitions[0]);
+
+    int numProcesses = sizeof(processes) / sizeof(processes[0]);
+
+    printf("Initial memory partitions:\n");
+
+    for (int i = 0; i < numPartitions; i++) {
+
+        printf("Partition %d: Size = %d KB\n", i + 1, partitions[i].size);
+
+    }
+
+    printf("\nFirst-fit allocation:\n");
+
+    for (int i = 0; i < numProcesses; i++) {
+
+        firstFit(processes[i], partitions, numPartitions);
+
+    }
+
+    return 0;
+
+}
