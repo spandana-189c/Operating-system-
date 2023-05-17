@@ -1,0 +1,121 @@
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#define MAX_TRACKS 100
+
+int cmpfunc(const void *a, const void *b) {
+
+    return (*(int *)a - *(int *)b);
+
+}
+
+int SCAN(int tracks[], int n, int start) {
+
+    qsort(tracks, n, sizeof(int), cmpfunc);
+
+    
+
+    int head_movement = 0;
+
+    int i, current_track;
+
+    
+
+    // Find the index where the head should start moving inwards
+
+    int index = 0;
+
+    for (i = 0; i < n; i++) {
+
+        if (tracks[i] >= start) {
+
+            index = i;
+
+            break;
+
+        }
+
+    }
+
+    
+
+    // Move the head from the start position towards the highest track
+
+    for (i = index; i < n; i++) {
+
+        current_track = tracks[i];
+
+        head_movement += abs(current_track - start);
+
+        start = current_track;
+
+    }
+
+    
+
+    // Move the head from the highest track to the lowest track
+
+    head_movement += abs(start - MAX_TRACKS - 1);
+
+    start = 0;
+
+    
+
+    // Move the head from the lowest track towards the first track after the start position
+
+    for (i = index - 1; i >= 0; i--) {
+
+        current_track = tracks[i];
+
+        head_movement += abs(current_track - start);
+
+        start = current_track;
+
+    }
+
+    
+
+    return head_movement;
+
+}
+
+int main() {
+
+    int tracks[MAX_TRACKS];
+
+    int n, i, start;
+
+    
+
+    printf("Enter the number of tracks: ");
+
+    scanf("%d", &n);
+
+    
+
+    printf("Enter the track positions: ");
+
+    for (i = 0; i < n; i++) {
+
+        scanf("%d", &tracks[i]);
+
+    }
+
+    
+
+    printf("Enter the starting track position: ");
+
+    scanf("%d", &start);
+
+    
+
+    int head_movement = SCAN(tracks, n, start);
+
+    printf("Average head movement: %.2f\n", (float)head_movement / n);
+
+    
+
+    return 0;
+
+}
