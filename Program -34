@@ -1,0 +1,107 @@
+#include <stdio.h>
+
+#define MAX_PARTITIONS 5
+
+#define MAX_PROCESSES 5
+
+void worstFit(int partitions[], int numPartitions, int processes[], int numProcesses)
+
+{
+
+    int allocation[MAX_PROCESSES] = {-1}; // Array to store allocation status of processes
+
+    int i, j;
+
+    for (i = 0; i < numProcesses; i++)
+
+    {
+
+        int worstIdx = -1; // Index of the partition with worst fit
+
+        for (j = 0; j < numPartitions; j++)
+
+        {
+
+            if (processes[i] <= partitions[j])
+
+            {
+
+                if (worstIdx == -1 || partitions[j] > partitions[worstIdx])
+
+                    worstIdx = j;
+
+            }
+
+        }
+
+        if (worstIdx != -1)
+
+        {
+
+            allocation[i] = worstIdx; // Allocate process to the worst fit partition
+
+            partitions[worstIdx] -= processes[i];
+
+        }
+
+    }
+
+    // Print the allocation details
+
+    printf("\nProcess No.\tProcess Size\tAllocated Partition\n");
+
+    for (i = 0; i < numProcesses; i++)
+
+    {
+
+        printf("%d\t\t%d KB\t\t", i + 1, processes[i]);
+
+        if (allocation[i] != -1)
+
+            printf("%d\n", allocation[i] + 1);
+
+        else
+
+            printf("Not Allocated\n");
+
+    }
+
+}
+
+int main()
+
+{
+
+    int partitions[MAX_PARTITIONS] = {40, 10, 30, 60}; // Memory partitions in KB
+
+    int processes[MAX_PROCESSES] = {100, 50, 30, 120, 35}; // Processes sizes in KB
+
+    int numPartitions = 4; // Number of memory partitions
+
+    int numProcesses = 5; // Number of processes
+
+    printf("Memory Partitions:\n");
+
+    for (int i = 0; i < numPartitions; i++)
+
+    {
+
+        printf("%d. %d KB\n", i + 1, partitions[i]);
+
+    }
+
+    printf("\nProcesses Sizes:\n");
+
+    for (int i = 0; i < numProcesses; i++)
+
+    {
+
+        printf("%d. %d KB\n", i + 1, processes[i]);
+
+    }
+
+    worstFit(partitions, numPartitions, processes, numProcesses);
+
+    return 0;
+
+}
